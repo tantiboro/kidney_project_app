@@ -1,3 +1,8 @@
+# app.py
+
+# --- FORCING A STREAMLIT REBUILD ---
+import streamlit as st
+import pandas as pd
 import streamlit as st
 import pandas as pd
 from st_aggrid import AgGrid, GridOptionsBuilder
