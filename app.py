@@ -97,18 +97,22 @@ else:
         # --- 8. Model Training ---
         st.header("Model Training & Evaluation")
         
-        # --- START OF NEW FIX: Add try/except block ---
+        # --- START OF NEW FIX: Initialize model_results as an error ---
+        model_results = {
+            "status": "error",
+            "message": "Model training failed. Please check your data and feature selection (e.g., ensure target is not continuous)."
+        }
+        # --- END OF NEW FIX ---
+        
         try:
             with st.spinner("Training model..."):
+                # This will now *overwrite* the error if training is successful
                 model_results = model.train_model(df, features, target)
         except Exception as e:
+            # If a totally unexpected error happens, log it and keep the default error
             st.error(f"An unexpected error occurred during model training: {e}")
-            # Create a manual error dictionary to prevent crashes below
-            model_results = {
-                "status": "error",
-                "message": "An unexpected error occurred. Please check your data and feature selection. See logs for details."
-            }
-        # --- END OF NEW FIX ---
+            # The 'model_results' variable is already set to an error state.
+            pass
             
         # --- Check if model training was successful ---
         if model_results['status'] == 'error':
