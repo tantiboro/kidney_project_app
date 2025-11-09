@@ -80,21 +80,37 @@ else:
             st.subheader("Feature Distributions")
             feature_to_plot = st.selectbox("Select feature to plot", features)
             if feature_to_plot:
-                fig1 = plotting.plot_feature_distribution(df, feature_to_plot, target)
-                st.plotly_chart(fig1, width='stretch') # --- FIX for deprecation ---
+                try:
+                    fig1 = plotting.plot_feature_distribution(df, feature_to_plot, target)
+                    st.plotly_chart(fig1, width='stretch') # --- FIX for deprecation ---
+                except Exception as e:
+                    st.warning(f"Could not plot distribution: {e}")
         
         with plot_col_2:
             st.subheader("Correlation Heatmap")
-            fig2 = plotting.plot_correlation_heatmap(df, features)
-            st.plotly_chart(fig2, width='stretch') # --- FIX for deprecation ---
+            try:
+                fig2 = plotting.plot_correlation_heatmap(df, features)
+                st.plotly_chart(fig2, width='stretch') # --- FIX for deprecation ---
+            except Exception as e:
+                st.warning(f"Could not plot heatmap: {e}")
 
         # --- 8. Model Training ---
         st.header("Model Training & Evaluation")
         
-        with st.spinner("Training model..."):
-            model_results = model.train_model(df, features, target)
-        
-        # --- NEW: Check if model training was successful ---
+        # --- START OF NEW FIX: Add try/except block ---
+        try:
+            with st.spinner("Training model..."):
+                model_results = model.train_model(df, features, target)
+        except Exception as e:
+            st.error(f"An unexpected error occurred during model training: {e}")
+            # Create a manual error dictionary to prevent crashes below
+            model_results = {
+                "status": "error",
+                "message": "An unexpected error occurred. Please check your data and feature selection. See logs for details."
+            }
+        # --- END OF NEW FIX ---
+            
+        # --- Check if model training was successful ---
         if model_results['status'] == 'error':
             st.error(model_results['message'])
         else:
@@ -141,4 +157,3 @@ else:
     
     else:
         st.info("Please select your features and a target variable from the sidebar.")
-        
