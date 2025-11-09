@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+
+# Data (Keeps your sample data, but ignores other CSVs)
+*.csv
+!kindey_stone_urine_analysis.csv
+
+# Env
+venv/
+ds_env/
+.DS_Store
