@@ -129,12 +129,12 @@ else:
             st.error(f"An unexpected error occurred during model training: {e}")
             pass
 
-        # # --- Check if model training was successful ---
-        # # This line CANNOT fail now, because model_results['status'] is guaranteed to exist.
-        # if model_results["status"] == "error":
-        #     st.error(model_results["message"])
-        # else:
-        #     st.success("Model trained successfully!")
+        # --- Check if model training was successful ---
+        # This line CANNOT fail now, because model_results['status'] is guaranteed to exist.
+        if model_results["status"] == "error":
+            st.error(model_results["message"])
+        else:
+            st.success("Model trained successfully!")
 
             # --- 9. Model Evaluation ---
         st.metric("Model Accuracy", f"{model_results['accuracy']:.2%}")
