@@ -1,15 +1,4 @@
-
-# app.py
-
-# --- FORCING V3 REBUILD ---
-import streamlit as st
-import pandas as pd
-...
-# app.py
-
-# --- FORCING A STREAMLIT REBUILD ---
-import streamlit as st
-import pandas as pd
+# --- V4 --- THIS IS A TEST TO FORCE A REBUILD ---
 import streamlit as st
 import pandas as pd
 from st_aggrid import AgGrid, GridOptionsBuilder
@@ -40,7 +29,7 @@ def load_data(path):
         return None
 
 # --- 2. Title & File Uploader ---
-st.title("📊 Interactive Logistic Regression Modeler")
+st.title("📊 Interactive Modeler (V4)") # <-- VISUAL MARKER
 uploaded_file = st.file_uploader(
     "Upload a new CSV file to override the default dataset", type="csv"
 )
@@ -109,24 +98,27 @@ else:
         # --- 8. Model Training ---
         st.header("Model Training & Evaluation")
         
-        # --- START OF NEW FIX: Initialize model_results as an error ---
+        # --- START OF THE CRITICAL FIX ---
+        # We initialize model_results as an error.
+        # This GUARANTEES that 'status' will exist.
         model_results = {
             "status": "error",
             "message": "Model training failed. Please check your data and feature selection (e.g., ensure target is not continuous)."
         }
-        # --- END OF NEW FIX ---
+        # --- END OF THE CRITICAL FIX ---
         
         try:
             with st.spinner("Training model..."):
-                # This will now *overwrite* the error if training is successful
+                # This will *overwrite* the error dictionary if training is successful
                 model_results = model.train_model(df, features, target)
         except Exception as e:
-            # If a totally unexpected error happens, log it and keep the default error
+            # If a totally unexpected error happens, we catch it.
+            # 'model_results' will keep its default error state.
             st.error(f"An unexpected error occurred during model training: {e}")
-            # The 'model_results' variable is already set to an error state.
             pass
             
         # --- Check if model training was successful ---
+        # This line CANNOT fail now, because model_results['status'] is guaranteed to exist.
         if model_results['status'] == 'error':
             st.error(model_results['message'])
         else:
