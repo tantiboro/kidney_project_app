@@ -137,33 +137,33 @@ else:
             st.success("Model trained successfully!")
 
             # --- 9. Model Evaluation ---
-            st.metric("Model Accuracy", f"{model_results['accuracy']:.2%}")
+        st.metric("Model Accuracy", f"{model_results['accuracy']:.2%}")
 
             # Check if multiclass warning is needed
-            if not model_results["is_binary"]:
-                st.info("Multiclass classification detected. ROC curve is disabled.")
+        if not model_results["is_binary"]:
+            st.info("Multiclass classification detected. ROC curve is disabled.")
 
-            eval_col_1, eval_col_2 = st.columns(2)
+        eval_col_1, eval_col_2 = st.columns(2)
 
-            with eval_col_1:
-                st.subheader("Confusion Matrix")
+        with eval_col_1:
+            st.subheader("Confusion Matrix")
                 # Get unique classes for labels from model results
-                labels = model_results["labels"]
-                fig3 = plotting.plot_confusion_matrix(
+            labels = model_results["labels"]
+            fig3 = plotting.plot_confusion_matrix(
                     model_results["confusion_matrix"], labels=labels
                 )
-                st.plotly_chart(fig3, width="stretch")  # --- FIX for deprecation ---
+            st.plotly_chart(fig3, width="stretch")  # --- FIX for deprecation ---
 
-            with eval_col_2:
+        with eval_col_2:
                 # Only show ROC curve if it's a binary problem
-                if model_results["is_binary"]:
+            if model_results["is_binary"]:
                     st.subheader("ROC Curve")
                     fpr, tpr, roc_auc = model_results["roc_curve"]
                     fig4 = plotting.plot_roc_curve(fpr, tpr, roc_auc)
                     st.plotly_chart(
                         fig4, width="stretch"
                     )  # --- FIX for deprecation ---
-                else:
+            else:
                     st.subheader("ROC Curve (Disabled)")
                     st.write(
                         "ROC curves are only generated for binary classification tasks."
