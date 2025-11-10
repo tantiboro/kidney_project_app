@@ -25,9 +25,11 @@ PAGE_STYLING = """
 </style>
 """
 
+
 def load_styling():
     """Injects the custom CSS for the app background."""
     st.markdown(PAGE_STYLING, unsafe_allow_html=True)
+
 
 def create_sidebar(df):
     """Creates the sidebar for feature and target selection."""
@@ -36,6 +38,7 @@ def create_sidebar(df):
     target = st.sidebar.selectbox("Target Variable", df.columns.tolist())
     return features, target
 
+
 def create_prediction_form(features):
     """Creates the form for new data prediction."""
     st.subheader("Predict New Data")
@@ -43,10 +46,10 @@ def create_prediction_form(features):
     with st.form("prediction_form"):
         for feature in features:
             new_data[feature] = st.number_input(feature, value=0.0)
-        
+
         # Submit button for the form
         submitted = st.form_submit_button("Predict")
-        
+
     if submitted:
         return pd.DataFrame(new_data, index=[0])
     return None
