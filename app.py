@@ -131,8 +131,13 @@ else:
 
         # --- Check if model training was successful ---
         # This line CANNOT fail now, because model_results['status'] is guaranteed to exist.
-        if model_results["status"] == "error":
-            st.error(model_results["message"])
+        # --- Check if model training was successful ---
+        if not isinstance(model_results, dict) or "status" not in model_results:
+            st.error(
+                "Model training failed: invalid result object returned from train_model()."
+            )
+        elif model_results["status"] == "error":
+            st.error(model_results.get("message", "Unknown training error."))
         else:
             st.success("Model trained successfully!")
 
