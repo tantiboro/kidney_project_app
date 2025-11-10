@@ -142,11 +142,12 @@ else:
             st.success("Model trained successfully!")
 
             # --- 9. Model Evaluation ---
-        st.metric("Model Accuracy", f"{model_results['accuracy']:.2%}")
+        st.metric("Model Accuracy", f"{model_results.get('accuracy', 0):.2%}")
 
-        # Check if multiclass warning is needed
-        if not model_results["is_binary"]:
+    # Check if multiclass warning is needed
+        if not model_results.get("is_binary", True):
             st.info("Multiclass classification detected. ROC curve is disabled.")
+
 
         eval_col_1, eval_col_2 = st.columns(2)
 
